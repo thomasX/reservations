@@ -29,16 +29,20 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         $user = User::where('email', $request->email)->first();
-        if (!$user  || Hash::check($request->password, $user->password)) {
+        if (!$user  || (!Hash::check($request->password, $user->password))) {
             return [
-                'message' => 'The provided credentials are incorrect. ',
+                'errors' => [
+                    'email' => 'The provided credentials are incorrect. ',
+                ]
+            ];
+        } else {
+            $token = $user->createToken($user->name);
+            // console.log('token: ' + $token);
+            return [
+                'user' => $user ,
+                'token' => $token->plainTextToken,
             ];
         }
-        $token = $user->createToken($user->name);
-        return [
-            'user' => $user ,
-            'token' => $token->plainTextToken,
-        ];
     }
 
     public function logout(Request $request){
