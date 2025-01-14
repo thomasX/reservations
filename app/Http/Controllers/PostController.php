@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\http\Request;
+use Illuminate\Http\Request;
+use Ramsey\Uuid\Guid\Fields;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller implements HasMiddleware
 {
-
     public static function middleware()
     {
         return [
@@ -35,7 +35,6 @@ class PostController extends Controller implements HasMiddleware
             'title' => 'required|max:25',
             'body' => 'required'
         ]);
-
         $post = $request->user()->posts()->create($fields);
         return $post ;
     }
